@@ -1,0 +1,17 @@
+--DROP TABLE IF EXISTS tipos_cambios;
+
+
+--CREATE TABLE tipos_cambios (
+--  id INT AUTO_INCREMENT  PRIMARY KEY,
+--  provider VARCHAR(20) NOT NULL,
+--  monedaorigen VARCHAR(3) NOT NULL,
+--  monedadestino VARCHAR(3) NOT NULL,
+--  tipocambio    FLOAT NOT NULL,
+--  fechacarga    TIMESTAMP NOT NULL
+--);
+
+--insert into tipos_cambios(id,provider,monedaorigen,monedadestino,tipocambio,fechacarga) values(default,'LOCAL', 'PEN', 'USD', 3.90, CURRENT_TIMESTAMP());
+--insert into tipos_cambios(id,provider,monedaorigen,monedadestino,tipocambio,fechacarga) values(default,'LOCAL', 'PEN', 'EUR', 4.58, CURRENT_TIMESTAMP());
+--insert into tipos_cambios(id,provider,monedaorigen,monedadestino,tipocambio,fechacarga) values(default,'LOCAL', 'PEN', 'BRL', 0.71, CURRENT_TIMESTAMP());
+--insert into tipos_cambios(id,provider,monedaorigen,monedadestino,tipocambio,fechacarga) values(default,'LOCAL', 'PEN', 'ARS', 0.04, CURRENT_TIMESTAMP());
+--insert into tipos_cambios(id,provider,monedaorigen,monedadestino,tipocambio,fechacarga) values(default,'LOCAL', 'PEN', 'BOB', 0.55, CURRENT_TIMESTAMP());
