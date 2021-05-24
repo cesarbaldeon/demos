@@ -59,8 +59,7 @@ public class TipoCambioServiceImpl implements TipoCambioService {
         return Single.create(singleSubscriber -> {
             try {
                 Optional<TipoCambioEntity> tipoCambioEntity = tipoCambioRepository.findByMonedas(
-                        tipoCambioRequest.getMonedaOrigen(),tipoCambioRequest.getMonedaDestino())
-                .stream().findFirst();
+                        tipoCambioRequest.getMonedaOrigen(),tipoCambioRequest.getMonedaDestino()).stream().findFirst();
                 if (tipoCambioEntity.isPresent()) {
                     singleSubscriber.onSuccess(
                             TipoCambioResponse.builder()
@@ -69,10 +68,36 @@ public class TipoCambioServiceImpl implements TipoCambioService {
                                     .monedaOrigen(tipoCambioEntity.get().getMonedaOrigen())
                                     .monedaDestino(tipoCambioEntity.get().getMonedaDestino())
                                     .build()
-                                    );
+                    );
                 } else {
-                         singleSubscriber.onError(new EntityNotFoundException());
+                    tipoCambioEntity = tipoCambioRepository.findByMonedas(
+                            tipoCambioRequest.getMonedaOrigen(),tipoCambioRequest.getMonedaDestino()).stream().findFirst();
+                    if (tipoCambioEntity.isPresent()) {
+                        singleSubscriber.onSuccess(
+                                TipoCambioResponse.builder()
+                                        .tipoCambio(1 / tipoCambioEntity.get().getTipocambio())
+                                        .provider(tipoCambioEntity.get().getProvider())
+                                        .monedaDestino(tipoCambioEntity.get().getMonedaOrigen())
+                                        .monedaOrigen(tipoCambioEntity.get().getMonedaDestino())
+                                        .build()
+                        );
+                    } else {
+                        Optional<TipoCambioEntity> tipoCambioEntityBase = tipoCambioRepository.findByMonedas("USD", tipoCambioRequest.getMonedaOrigen()).stream().findFirst();
+                        Optional<TipoCambioEntity> tipoCambioEntityDest = tipoCambioRepository.findByMonedas("USD", tipoCambioRequest.getMonedaDestino()).stream().findFirst();
+                        if (tipoCambioEntityBase.isPresent() && tipoCambioEntityDest.isPresent()) {
+                            singleSubscriber.onSuccess(
+                                    TipoCambioResponse.builder()
+                                            .tipoCambio(tipoCambioEntityDest.get().getTipocambio() / tipoCambioEntityBase.get().getTipocambio())
+                                            .provider(tipoCambioEntityBase.get().getProvider())
+                                            .monedaDestino(tipoCambioEntityDest.get().getMonedaDestino())
+                                            .monedaOrigen(tipoCambioEntityBase.get().getMonedaDestino())
+                                            .build()
+                            );
+                        } else {
+                            singleSubscriber.onError(new EntityNotFoundException());
                         }
+                    }
+                }
             } catch (Exception ex) {
                 singleSubscriber.onError(new EntityNotFoundException());
             }
